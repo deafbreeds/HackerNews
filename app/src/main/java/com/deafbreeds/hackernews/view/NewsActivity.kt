@@ -15,6 +15,7 @@ class NewsActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_news)
         if(savedInstanceState == null){
+            loading_view.visibility = View.VISIBLE
             setupWebView(intent.getStringExtra(EXTRA_URL))
         }
     }
