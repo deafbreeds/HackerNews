@@ -2,6 +2,7 @@ package com.deafbreeds.hackernews.view
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,12 +19,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initUI()
 
         viewModelNews = ViewModelProvider(this).get(NewsListViewModel::class.java)
         if(savedInstanceState == null){
             viewModelNews.refresh()
+            runRecyclerViewAnimation()
         }
+        observeViewModel()
+    }
 
+    private fun initUI(){
         newsList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = newsListAdapter
@@ -32,9 +38,14 @@ class MainActivity : AppCompatActivity() {
             swipeRefreshLayout.isRefreshing = false
             viewModelNews.refresh()
         }
+    }
 
-        observeViewModel()
-
+    private fun runRecyclerViewAnimation() {
+        val controller =
+            AnimationUtils.loadLayoutAnimation(newsList.context, R.anim.layout_animation_fall_down)
+        newsList.layoutAnimation = controller
+        newsList.adapter!!.notifyDataSetChanged()
+        newsList.scheduleLayoutAnimation()
     }
 
     private fun observeViewModel() {
