@@ -14,7 +14,7 @@ class NewsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_news)
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             loading_view.visibility = View.VISIBLE
             setupWebView(intent.getStringExtra(EXTRA_URL))
         }
@@ -41,7 +41,14 @@ class NewsActivity : AppCompatActivity() {
 
         }
         web_view.loadUrl(url)
+    }
 
+    override fun onBackPressed() {
+        if (web_view.canGoBack()) {
+            web_view.goBack()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
