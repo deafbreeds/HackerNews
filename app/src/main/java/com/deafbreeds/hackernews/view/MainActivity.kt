@@ -12,31 +12,29 @@ import com.deafbreeds.hackernews.viewmodel.NewsListViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
-    lateinit var viewModelNews: NewsListViewModel
     private val newsListAdapter = NewsListAdapter(arrayListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val newsListViewModel = ViewModelProvider(this).get(NewsListViewModel::class.java)
         setContentView(R.layout.activity_main)
-        initUI()
+        initUI(newsListViewModel)
 
-        viewModelNews = ViewModelProvider(this).get(NewsListViewModel::class.java)
         if(savedInstanceState == null){
-            viewModelNews.refresh()
+            newsListViewModel.refresh()
             runRecyclerViewAnimation()
         }
-        observeViewModel()
+        observeViewModel(newsListViewModel)
     }
 
-    private fun initUI(){
+    private fun initUI(viewModel: NewsListViewModel){
         newsList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = newsListAdapter
         }
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = false
-            viewModelNews.refresh()
+            viewModel.refresh()
         }
     }
 
@@ -48,21 +46,21 @@ class MainActivity : AppCompatActivity() {
         newsList.scheduleLayoutAnimation()
     }
 
-    private fun observeViewModel() {
-        viewModelNews.news.observe(this, Observer {
+    private fun observeViewModel(viewModel: NewsListViewModel) {
+        viewModel.news.observe(this, Observer {
             it?.let {
                 newsList.visibility = View.VISIBLE
                 newsListAdapter.updateNews(it)
             }
         })
 
-        viewModelNews.loadError.observe(this, Observer { isError ->
+        viewModel.loadError.observe(this, Observer { isError ->
             isError?.let {
                 newsList_error.visibility = if (it) View.VISIBLE else View.GONE
             }
         })
 
-        viewModelNews.loading.observe(this, Observer { isLoading ->
+        viewModel.loading.observe(this, Observer { isLoading ->
             isLoading?.let {
                 loading_view.visibility = if (it) View.VISIBLE else View.GONE
                 if(it){
