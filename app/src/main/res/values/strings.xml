@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Hacker News</string>
+    <string name="error_text">An error occurred while loading data.</string>
+
+    <plurals name="hour_ago">
+        <item quantity="one">%d hour ago</item>
+        <item quantity="other">%d hours ago</item>
+    </plurals>
+
+    <plurals name="day_ago">
+        <item quantity="one">%d day ago</item>
+        <item quantity="other">%d days ago</item>
+    </plurals>
+</resources>
